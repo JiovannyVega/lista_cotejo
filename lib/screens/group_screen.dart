@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
+import 'activity_detail_screen.dart';
 
 class GroupScreen extends StatefulWidget {
   final String clave;
@@ -285,6 +286,16 @@ class _GroupScreenState extends State<GroupScreen>
                           return ListTile(
                             title: Text(actividad['nombre']),
                             subtitle: Text(actividad['fecha']),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ActivityDetailScreen(
+                                    actividad: actividad,
+                                  ),
+                                ),
+                              );
+                            },
                           );
                         },
                       );
