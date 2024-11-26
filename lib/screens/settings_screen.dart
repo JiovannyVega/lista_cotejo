@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
+import 'students_screen.dart'; // Importar la nueva pantalla de alumnos
 
 class SettingsScreen extends StatelessWidget {
   final Future<Database> database;
@@ -166,6 +167,18 @@ class SettingsScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () => _showEditProfileDialog(context),
               child: const Text('Modificar Perfil'),
+            ),
+            const SizedBox(height: 20), // Espacio entre botones
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => StudentsScreen(database: database),
+                  ),
+                );
+              },
+              child: const Text('Ver Alumnos'),
             ),
           ],
         ),

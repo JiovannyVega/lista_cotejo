@@ -5,6 +5,7 @@ import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/add_user_screen.dart';
 import 'screens/settings_screen.dart';
+import 'screens/students_screen.dart'; // Importar la nueva pantalla de alumnos
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -254,6 +255,8 @@ class MainApp extends StatelessWidget {
               username:
                   '', // Proveer un valor por defecto o ajustar según sea necesario
             ),
+        '/students': (context) =>
+            StudentsScreen(database: database), // Nueva ruta
       },
     );
   }
