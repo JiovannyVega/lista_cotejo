@@ -39,6 +39,20 @@ class _AddUserScreenState extends State<AddUserScreen> {
       return;
     }
 
+    if (username.length < 4) {
+      setState(() {
+        _errorMessage = 'El nombre de usuario debe tener al menos 4 caracteres';
+      });
+      return;
+    }
+
+    if (password.length < 6) {
+      setState(() {
+        _errorMessage = 'La contraseña debe tener al menos 6 caracteres';
+      });
+      return;
+    }
+
     if (password != repeatPassword) {
       setState(() {
         _errorMessage = 'Las contraseñas no coinciden';
@@ -47,6 +61,20 @@ class _AddUserScreenState extends State<AddUserScreen> {
     }
 
     final db = await widget.database;
+
+    // Verificar si el nombre de usuario ya existe
+    final existingUser = await db.query(
+      'Usuario',
+      where: 'username = ?',
+      whereArgs: [username],
+    );
+
+    if (existingUser.isNotEmpty) {
+      setState(() {
+        _errorMessage = 'El nombre de usuario ya está en uso';
+      });
+      return;
+    }
 
     // Insertar en la tabla Maestro
     final idMaestro = await db.insert(

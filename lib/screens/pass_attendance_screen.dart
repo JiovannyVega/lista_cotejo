@@ -133,39 +133,75 @@ class _PassAttendanceScreenState extends State<PassAttendanceScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final db = await openDatabase('lista_cotejo.db');
-          for (var alumno in await _getAlumnos()) {
-            final idAlumno = alumno['id_alumno'];
-            final idFolio = alumno['id_folio'];
-            await db.insert(
-              'Asistencia',
-              {
-                'asistencia': _asistencia[idAlumno]! ? 1 : 0,
-                'fecha': DateTime.now().toIso8601String(),
-                'id_folio': idFolio,
-              },
-            );
-            await db.insert(
-              'Participacion',
-              {
-                'participacion': _participacion[idAlumno]! ? 1 : 0,
-                'fecha': DateTime.now().toIso8601String(),
-                'id_folio': idFolio,
-              },
-            );
-            await db.insert(
-              'Conducta',
-              {
-                'conducta': _conducta[idAlumno]! ? 1 : 0,
-                'fecha': DateTime.now().toIso8601String(),
-                'id_folio': idFolio,
-              },
-            );
+          if (_validateInputs()) {
+            final db = await openDatabase('lista_cotejo.db');
+            for (var alumno in await _getAlumnos()) {
+              final idAlumno = alumno['id_alumno'];
+              final idFolio = alumno['id_folio'];
+              await db.insert(
+                'Asistencia',
+                {
+                  'asistencia': _asistencia[idAlumno]! ? 1 : 0,
+                  'fecha': DateTime.now().toIso8601String(),
+                  'id_folio': idFolio,
+                },
+              );
+              await db.insert(
+                'Participacion',
+                {
+                  'participacion': _participacion[idAlumno]! ? 1 : 0,
+                  'fecha': DateTime.now().toIso8601String(),
+                  'id_folio': idFolio,
+                },
+              );
+              await db.insert(
+                'Conducta',
+                {
+                  'conducta': _conducta[idAlumno]! ? 1 : 0,
+                  'fecha': DateTime.now().toIso8601String(),
+                  'id_folio': idFolio,
+                },
+              );
+            }
+            Navigator.of(context).pop();
+          } else {
+            _showValidationError();
           }
-          Navigator.of(context).pop();
         },
         child: const Icon(Icons.save),
       ),
+    );
+  }
+
+  bool _validateInputs() {
+    for (var key in _asistencia.keys) {
+      if (_asistencia[key] == null ||
+          _participacion[key] == null ||
+          _conducta[key] == null) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  void _showValidationError() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Error de validación'),
+          content: const Text(
+              'Por favor, asegúrese de llenar todos los campos correctamente.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

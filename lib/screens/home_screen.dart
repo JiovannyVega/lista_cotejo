@@ -46,6 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _showAddGroupDialog(BuildContext context) {
     final claveController = TextEditingController();
     String? selectedMateria;
+    final _formKey = GlobalKey<FormState>();
 
     showDialog(
       context: context,
@@ -61,27 +62,42 @@ class _HomeScreenState extends State<HomeScreen> {
               final materias = snapshot.data ?? [];
               return AlertDialog(
                 title: const Text('Agregar Grupo'),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(
-                      controller: claveController,
-                      decoration: const InputDecoration(labelText: 'Clave'),
-                    ),
-                    DropdownButtonFormField<String>(
-                      value: selectedMateria,
-                      items: materias.map((materia) {
-                        return DropdownMenuItem<String>(
-                          value: materia['id_materia'].toString(),
-                          child: Text(materia['nombre']),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        selectedMateria = value;
-                      },
-                      decoration: const InputDecoration(labelText: 'Materia'),
-                    ),
-                  ],
+                content: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextFormField(
+                        controller: claveController,
+                        decoration: const InputDecoration(labelText: 'Clave'),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor ingrese una clave';
+                          }
+                          return null;
+                        },
+                      ),
+                      DropdownButtonFormField<String>(
+                        value: selectedMateria,
+                        items: materias.map((materia) {
+                          return DropdownMenuItem<String>(
+                            value: materia['id_materia'].toString(),
+                            child: Text(materia['nombre']),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          selectedMateria = value;
+                        },
+                        decoration: const InputDecoration(labelText: 'Materia'),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Por favor seleccione una materia';
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
+                  ),
                 ),
                 actions: [
                   TextButton(
@@ -92,25 +108,27 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      final db = await widget.database;
-                      final idMaestroResult = await db.rawQuery('''
-                        SELECT id_maestro FROM Usuario WHERE username = ?
-                      ''', [widget.username]);
+                      if (_formKey.currentState!.validate()) {
+                        final db = await widget.database;
+                        final idMaestroResult = await db.rawQuery('''
+                          SELECT id_maestro FROM Usuario WHERE username = ?
+                        ''', [widget.username]);
 
-                      if (idMaestroResult.isNotEmpty) {
-                        final idMaestro = idMaestroResult.first['id_maestro'];
-                        await db.insert(
-                          'Grupo',
-                          {
-                            'clave': claveController.text,
-                            'id_maestro': idMaestro,
-                            'id_materia': int.parse(selectedMateria!),
-                          },
-                        );
-                        setState(() {}); // Actualizar la lista de grupos
+                        if (idMaestroResult.isNotEmpty) {
+                          final idMaestro = idMaestroResult.first['id_maestro'];
+                          await db.insert(
+                            'Grupo',
+                            {
+                              'clave': claveController.text,
+                              'id_maestro': idMaestro,
+                              'id_materia': int.parse(selectedMateria!),
+                            },
+                          );
+                          setState(() {}); // Actualizar la lista de grupos
+                        }
+
+                        Navigator.of(context).pop();
                       }
-
-                      Navigator.of(context).pop();
                     },
                     child: const Text('Agregar'),
                   ),

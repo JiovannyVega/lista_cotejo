@@ -115,14 +115,14 @@ void main() async {
         );
       ''');
 
-      // Insertar 5 materias
-      await db.insert('Materia', {'nombre': 'Matemáticas'});
-      await db.insert('Materia', {'nombre': 'Física'});
-      await db.insert('Materia', {'nombre': 'Quimica'});
-      await db.insert('Materia', {'nombre': 'Biología'});
-      await db.insert('Materia', {'nombre': 'Historia'});
+      // Insertar 5 materias con validación
+      await insertMateria(db, 'Matemáticas');
+      await insertMateria(db, 'Física');
+      await insertMateria(db, 'Quimica');
+      await insertMateria(db, 'Biología');
+      await insertMateria(db, 'Historia');
 
-      // Insertar un usuario con los detalles proporcionados
+      // Insertar un usuario con validación
       final idMaestro = await db.insert(
         'Maestro',
         {
@@ -132,8 +132,8 @@ void main() async {
         },
       );
 
-      await db.insert(
-        'Usuario',
+      await insertUsuario(
+        db,
         {
           'username': 'Jiovanny',
           'password': 'Hola',
@@ -141,62 +141,62 @@ void main() async {
         },
       );
 
-      // Insertar 10 alumnos
-      await db.insert('Alumno', {
+      // Insertar 10 alumnos con validación
+      await insertAlumno(db, {
         'nombre': 'Juan',
         'apellido': 'Pérez',
         'carrera': 'ISC',
         'año_ingreso': '2020-01-01'
       });
-      await db.insert('Alumno', {
+      await insertAlumno(db, {
         'nombre': 'María',
         'apellido': 'Gómez',
         'carrera': 'ISC',
         'año_ingreso': '2020-01-01'
       });
-      await db.insert('Alumno', {
+      await insertAlumno(db, {
         'nombre': 'Carlos',
         'apellido': 'López',
         'carrera': 'ISC',
         'año_ingreso': '2020-01-01'
       });
-      await db.insert('Alumno', {
+      await insertAlumno(db, {
         'nombre': 'Ana',
         'apellido': 'Martínez',
         'carrera': 'ISC',
         'año_ingreso': '2020-01-01'
       });
-      await db.insert('Alumno', {
+      await insertAlumno(db, {
         'nombre': 'Luis',
         'apellido': 'Hernández',
         'carrera': 'ISC',
         'año_ingreso': '2020-01-01'
       });
-      await db.insert('Alumno', {
+      await insertAlumno(db, {
         'nombre': 'Laura',
         'apellido': 'Díaz',
         'carrera': 'ISC',
         'año_ingreso': '2020-01-01'
       });
-      await db.insert('Alumno', {
+      await insertAlumno(db, {
         'nombre': 'José',
         'apellido': 'Ramírez',
         'carrera': 'ISC',
         'año_ingreso': '2020-01-01'
       });
-      await db.insert('Alumno', {
+      await insertAlumno(db, {
         'nombre': 'Marta',
         'apellido': 'Sánchez',
         'carrera': 'ISC',
         'año_ingreso': '2020-01-01'
       });
-      await db.insert('Alumno', {
+      await insertAlumno(db, {
         'nombre': 'Pedro',
         'apellido': 'Torres',
         'carrera': 'ISC',
         'año_ingreso': '2020-01-01'
       });
-      await db.insert('Alumno', {
+      await insertAlumno(db, {
         'nombre': 'Sofía',
         'apellido': 'Flores',
         'carrera': 'ISC',
@@ -233,6 +233,32 @@ Future<void> printTableContent(
   for (var row in rows) {
     print(row);
   }
+}
+
+Future<void> insertMateria(Database db, String nombre) async {
+  if (nombre.isEmpty) {
+    throw Exception('El nombre de la materia no puede estar vacío');
+  }
+  await db.insert('Materia', {'nombre': nombre});
+}
+
+Future<void> insertAlumno(Database db, Map<String, dynamic> alumno) async {
+  if (alumno['nombre'].isEmpty ||
+      alumno['apellido'].isEmpty ||
+      alumno['carrera'].isEmpty ||
+      alumno['año_ingreso'].isEmpty) {
+    throw Exception('Todos los campos del alumno deben estar llenos');
+  }
+  await db.insert('Alumno', alumno);
+}
+
+Future<void> insertUsuario(Database db, Map<String, dynamic> usuario) async {
+  if (usuario['username'].isEmpty ||
+      usuario['password'].isEmpty ||
+      usuario['id_maestro'] == null) {
+    throw Exception('Todos los campos del usuario deben estar llenos');
+  }
+  await db.insert('Usuario', usuario);
 }
 
 class MainApp extends StatelessWidget {

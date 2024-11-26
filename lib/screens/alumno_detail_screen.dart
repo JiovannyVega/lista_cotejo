@@ -16,6 +16,12 @@ class AlumnoDetailScreen extends StatelessWidget {
   });
 
   Future<List<Map<String, dynamic>>> _getActividadesConCalificacion() async {
+    if (idAlumno <= 0 ||
+        nombre.isEmpty ||
+        apellido.isEmpty ||
+        idGrupo.isEmpty) {
+      throw Exception('Todos los campos deben estar llenos y ser válidos.');
+    }
     final db = await openDatabase('lista_cotejo.db');
     return await db.rawQuery('''
       SELECT Actividad.nombre, Actividad.ponderacion, IFNULL(Cal_Act.calif, 0) AS calif
@@ -29,6 +35,24 @@ class AlumnoDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (idAlumno <= 0 ||
+        nombre.isEmpty ||
+        apellido.isEmpty ||
+        idGrupo.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Error'),
+        ),
+        body: const Center(
+          child: Text(
+            'Todos los campos deben estar llenos y ser válidos.',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('$nombre $apellido'),

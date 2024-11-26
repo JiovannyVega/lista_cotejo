@@ -172,6 +172,16 @@ class _GroupScreenState extends State<GroupScreen>
             ),
             ElevatedButton(
               onPressed: () async {
+                if (_nombreActividadController.text.isEmpty ||
+                    _descActividadController.text.isEmpty ||
+                    _fechaActividadController.text.isEmpty ||
+                    _ponderacionActividadController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text('Por favor, llena todos los campos')),
+                  );
+                  return;
+                }
                 final db = await openDatabase('lista_cotejo.db');
                 await db.insert(
                   'Actividad',
@@ -235,6 +245,13 @@ class _GroupScreenState extends State<GroupScreen>
                   ),
                   ElevatedButton(
                     onPressed: () async {
+                      if (selectedAlumno == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Por favor, selecciona un alumno')),
+                        );
+                        return;
+                      }
                       final db = await openDatabase('lista_cotejo.db');
                       await db.insert(
                         'Folio',

@@ -57,6 +57,16 @@ class _StudentsScreenState extends State<StudentsScreen> {
             ),
             ElevatedButton(
               onPressed: () async {
+                if (nameController.text.isEmpty ||
+                    lastNameController.text.isEmpty ||
+                    careerController.text.isEmpty ||
+                    yearController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text('Todos los campos son obligatorios')),
+                  );
+                  return;
+                }
                 final db = await widget.database;
                 await db.insert(
                   'Alumno',

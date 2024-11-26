@@ -50,6 +50,14 @@ class SettingsScreen extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () async {
+                  if (nameController.text.isEmpty ||
+                      passwordController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Todos los campos deben estar llenos')),
+                    );
+                    return;
+                  }
                   await db.update(
                     'Usuario',
                     {
@@ -126,6 +134,16 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () async {
+                    if (nameController.text.isEmpty ||
+                        lastNameController.text.isEmpty ||
+                        careerController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content:
+                                Text('Todos los campos deben estar llenos')),
+                      );
+                      return;
+                    }
                     await db.update(
                       'Maestro',
                       {
