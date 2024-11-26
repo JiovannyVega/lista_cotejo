@@ -112,6 +112,32 @@ void main() async {
           FOREIGN KEY (id_maestro) REFERENCES Maestro(id_maestro)
         );
       ''');
+
+      // Insertar 5 materias
+      await db.insert('Materia', {'nombre': 'Matemáticas'});
+      await db.insert('Materia', {'nombre': 'Física'});
+      await db.insert('Materia', {'nombre': 'Quimica'});
+      await db.insert('Materia', {'nombre': 'Biología'});
+      await db.insert('Materia', {'nombre': 'Historia'});
+
+      // Insertar un usuario con los detalles proporcionados
+      final idMaestro = await db.insert(
+        'Maestro',
+        {
+          'nombre': 'Erick',
+          'apellido': 'Gamez',
+          'carrera': 'ISC',
+        },
+      );
+
+      await db.insert(
+        'Usuario',
+        {
+          'username': 'Jiovanny',
+          'password': 'Hola',
+          'id_maestro': idMaestro,
+        },
+      );
     },
     version: 1,
   );
@@ -153,6 +179,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
         '/': (context) => LoginScreen(database: database),
