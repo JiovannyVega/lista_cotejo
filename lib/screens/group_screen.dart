@@ -23,7 +23,6 @@ class _GroupScreenState extends State<GroupScreen>
   final _fechaActividadController = TextEditingController();
   final _ponderacionActividadController = TextEditingController();
   Map<DateTime, List<dynamic>> _events = {};
-  DateTime? _selectedDay;
 
   @override
   void initState() {
@@ -493,9 +492,7 @@ class _GroupScreenState extends State<GroupScreen>
                     return _events[eventDate] ?? [];
                   },
                   onDaySelected: (selectedDay, focusedDay) {
-                    setState(() {
-                      _selectedDay = selectedDay;
-                    });
+                    setState(() {});
                     _showActivitiesForDay(context, selectedDay);
                   },
                 ),
