@@ -19,6 +19,7 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
       JOIN Alumno ON Folio.id_alumno = Alumno.id_alumno
       LEFT JOIN Cal_Act ON Folio.id_folio = Cal_Act.id_folio AND Cal_Act.id_actividad = ?
       WHERE Folio.id_grupo = ?
+      ORDER BY Alumno.nombre, Alumno.apellido
     ''', [widget.actividad['id_actividad'], widget.actividad['id_grupo']]);
   }
 

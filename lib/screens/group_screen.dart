@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'activity_detail_screen.dart';
+import 'alumno_detail_screen.dart';
 
 class GroupScreen extends StatefulWidget {
   final String clave;
@@ -46,6 +47,7 @@ class _GroupScreenState extends State<GroupScreen>
       FROM Folio
       JOIN Alumno ON Folio.id_alumno = Alumno.id_alumno
       WHERE Folio.id_grupo = ?
+      ORDER BY Alumno.nombre, Alumno.apellido
     ''', [widget.clave]);
   }
 
@@ -59,6 +61,7 @@ class _GroupScreenState extends State<GroupScreen>
         FROM Folio
         WHERE id_grupo = ?
       )
+      ORDER BY Alumno.nombre, Alumno.apellido
     ''', [widget.clave]);
   }
 
@@ -345,6 +348,19 @@ class _GroupScreenState extends State<GroupScreen>
                               onPressed: () => _showDeleteConfirmationDialog(
                                   context, alumno['id_alumno']),
                             ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AlumnoDetailScreen(
+                                    idAlumno: alumno['id_alumno'],
+                                    nombre: alumno['nombre'],
+                                    apellido: alumno['apellido'],
+                                    idGrupo: widget.clave,
+                                  ),
+                                ),
+                              );
+                            },
                           );
                         },
                       );
