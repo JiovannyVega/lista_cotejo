@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
+import 'group_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final Future<Database> database;
@@ -156,6 +157,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Text('Hola, $maestroName!',
                       style: TextStyle(fontSize: 24)),
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child:
+                      Text('Lista de Grupos', style: TextStyle(fontSize: 20)),
+                ),
                 Expanded(
                   child: FutureBuilder<List<Map<String, dynamic>>>(
                     future: _getGrupos(),
@@ -166,16 +172,37 @@ class _HomeScreenState extends State<HomeScreen> {
                         return Center(child: Text('Error: ${snapshot.error}'));
                       } else {
                         final grupos = snapshot.data ?? [];
-                        return ListView.builder(
-                          itemCount: grupos.length,
-                          itemBuilder: (context, index) {
-                            final grupo = grupos[index];
-                            return ListTile(
-                              title: Text(grupo['clave']),
-                              subtitle: Text(grupo['materia']),
-                            );
-                          },
-                        );
+                        if (grupos.isEmpty) {
+                          return Center(
+                            child: Text(
+                              'No tienes grupos. Para crear un grupo, presiona el botón "+" en la esquina inferior derecha.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          );
+                        } else {
+                          return ListView.builder(
+                            itemCount: grupos.length,
+                            itemBuilder: (context, index) {
+                              final grupo = grupos[index];
+                              return ListTile(
+                                title: Text(grupo['clave']),
+                                subtitle: Text(grupo['materia']),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => GroupScreen(
+                                        clave: grupo['clave'],
+                                        materia: grupo['materia'],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        }
                       }
                     },
                   ),

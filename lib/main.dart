@@ -138,6 +138,68 @@ void main() async {
           'id_maestro': idMaestro,
         },
       );
+
+      // Insertar 10 alumnos
+      await db.insert('Alumno', {
+        'nombre': 'Juan',
+        'apellido': 'Pérez',
+        'carrera': 'ISC',
+        'año_ingreso': '2020-01-01'
+      });
+      await db.insert('Alumno', {
+        'nombre': 'María',
+        'apellido': 'Gómez',
+        'carrera': 'ISC',
+        'año_ingreso': '2020-01-01'
+      });
+      await db.insert('Alumno', {
+        'nombre': 'Carlos',
+        'apellido': 'López',
+        'carrera': 'ISC',
+        'año_ingreso': '2020-01-01'
+      });
+      await db.insert('Alumno', {
+        'nombre': 'Ana',
+        'apellido': 'Martínez',
+        'carrera': 'ISC',
+        'año_ingreso': '2020-01-01'
+      });
+      await db.insert('Alumno', {
+        'nombre': 'Luis',
+        'apellido': 'Hernández',
+        'carrera': 'ISC',
+        'año_ingreso': '2020-01-01'
+      });
+      await db.insert('Alumno', {
+        'nombre': 'Laura',
+        'apellido': 'Díaz',
+        'carrera': 'ISC',
+        'año_ingreso': '2020-01-01'
+      });
+      await db.insert('Alumno', {
+        'nombre': 'José',
+        'apellido': 'Ramírez',
+        'carrera': 'ISC',
+        'año_ingreso': '2020-01-01'
+      });
+      await db.insert('Alumno', {
+        'nombre': 'Marta',
+        'apellido': 'Sánchez',
+        'carrera': 'ISC',
+        'año_ingreso': '2020-01-01'
+      });
+      await db.insert('Alumno', {
+        'nombre': 'Pedro',
+        'apellido': 'Torres',
+        'carrera': 'ISC',
+        'año_ingreso': '2020-01-01'
+      });
+      await db.insert('Alumno', {
+        'nombre': 'Sofía',
+        'apellido': 'Flores',
+        'carrera': 'ISC',
+        'año_ingreso': '2020-01-01'
+      });
     },
     version: 1,
   );
