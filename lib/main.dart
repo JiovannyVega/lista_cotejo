@@ -10,7 +10,7 @@ import 'screens/students_screen.dart'; // Importar la nueva pantalla de alumnos
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final databasePath = join(await getDatabasesPath(), 'lista_cotejo.db');
-  await deleteDatabase(databasePath); // Eliminar la base de datos existente
+  // await deleteDatabase(databasePath); // Eliminar la base de datos existente
 
   final database = openDatabase(
     databasePath,
