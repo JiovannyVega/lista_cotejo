@@ -3,6 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'activity_detail_screen.dart';
 import 'alumno_detail_screen.dart';
+import 'pass_attendance_screen.dart'; // Importar la nueva pantalla
 
 class GroupScreen extends StatefulWidget {
   final String clave;
@@ -22,6 +23,7 @@ class _GroupScreenState extends State<GroupScreen>
   final _fechaActividadController = TextEditingController();
   final _ponderacionActividadController = TextEditingController();
   Map<DateTime, List<dynamic>> _events = {};
+  DateTime? _selectedDay;
 
   @override
   void initState() {
@@ -287,9 +289,26 @@ class _GroupScreenState extends State<GroupScreen>
               },
               child: const Text('Cerrar'),
             ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _navigateToPassAttendanceScreen(context, day);
+              },
+              child: const Text('Pasar Lista'),
+            ),
           ],
         );
       },
+    );
+  }
+
+  void _navigateToPassAttendanceScreen(BuildContext context, DateTime date) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            PassAttendanceScreen(clave: widget.clave, date: date),
+      ),
     );
   }
 
@@ -429,35 +448,42 @@ class _GroupScreenState extends State<GroupScreen>
               ),
             ],
           ),
-          Center(
-            child: TableCalendar(
-              firstDay: DateTime.utc(2000, 1, 1),
-              lastDay: DateTime.utc(2100, 12, 31),
-              focusedDay: DateTime.now(),
-              calendarFormat: CalendarFormat.month,
-              startingDayOfWeek: StartingDayOfWeek.monday,
-              headerStyle: const HeaderStyle(
-                formatButtonVisible: false,
-                titleCentered: true,
-              ),
-              calendarStyle: CalendarStyle(
-                todayDecoration: BoxDecoration(
-                  color: Colors.blue,
-                  shape: BoxShape.circle,
+          Stack(
+            children: [
+              Center(
+                child: TableCalendar(
+                  firstDay: DateTime.utc(2000, 1, 1),
+                  lastDay: DateTime.utc(2100, 12, 31),
+                  focusedDay: DateTime.now(),
+                  calendarFormat: CalendarFormat.month,
+                  startingDayOfWeek: StartingDayOfWeek.monday,
+                  headerStyle: const HeaderStyle(
+                    formatButtonVisible: false,
+                    titleCentered: true,
+                  ),
+                  calendarStyle: CalendarStyle(
+                    todayDecoration: BoxDecoration(
+                      color: Colors.blue,
+                      shape: BoxShape.circle,
+                    ),
+                    markerDecoration: BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  eventLoader: (day) {
+                    final eventDate = DateTime(day.year, day.month, day.day);
+                    return _events[eventDate] ?? [];
+                  },
+                  onDaySelected: (selectedDay, focusedDay) {
+                    setState(() {
+                      _selectedDay = selectedDay;
+                    });
+                    _showActivitiesForDay(context, selectedDay);
+                  },
                 ),
-                markerDecoration: BoxDecoration(
-                  color: Colors.red,
-                  shape: BoxShape.circle,
-                ),
               ),
-              eventLoader: (day) {
-                final eventDate = DateTime(day.year, day.month, day.day);
-                return _events[eventDate] ?? [];
-              },
-              onDaySelected: (selectedDay, focusedDay) {
-                _showActivitiesForDay(context, selectedDay);
-              },
-            ),
+            ],
           ),
         ],
       ),
