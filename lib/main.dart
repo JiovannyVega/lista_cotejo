@@ -218,9 +218,9 @@ Future<void> listTables(Future<Database> database) async {
   final List<Map<String, dynamic>> tables =
       await db.rawQuery('SELECT name FROM sqlite_master WHERE type="table"');
   print('Tablas en la base de datos:');
-  tables.forEach((table) {
+  for (var table in tables) {
     print(table['name']);
-  });
+  }
 }
 
 Future<void> printTableContent(
@@ -228,9 +228,9 @@ Future<void> printTableContent(
   final db = await database;
   final List<Map<String, dynamic>> rows = await db.query(tableName);
   print('Contenido de la tabla $tableName:');
-  rows.forEach((row) {
+  for (var row in rows) {
     print(row);
-  });
+  }
 }
 
 class MainApp extends StatelessWidget {

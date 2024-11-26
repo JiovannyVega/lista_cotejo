@@ -22,7 +22,8 @@ class _GroupScreenState extends State<GroupScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController =
+        TabController(length: 2, vsync: this); // Cambiar a 2 pestañas
   }
 
   @override
@@ -40,7 +41,7 @@ class _GroupScreenState extends State<GroupScreen>
   Future<List<Map<String, dynamic>>> _getAlumnos() async {
     final db = await openDatabase('lista_cotejo.db');
     return await db.rawQuery('''
-      SELECT Alumno.nombre, Alumno.apellido
+      SELECT Alumno.id_alumno, Alumno.nombre, Alumno.apellido
       FROM Folio
       JOIN Alumno ON Folio.id_alumno = Alumno.id_alumno
       WHERE Folio.id_grupo = ?
@@ -60,26 +61,62 @@ class _GroupScreenState extends State<GroupScreen>
     ''', [widget.clave]);
   }
 
+  Future<void> _deleteAlumno(int idAlumno) async {
+    final db = await openDatabase('lista_cotejo.db');
+    await db.delete('Folio',
+        where: 'id_alumno = ? AND id_grupo = ?',
+        whereArgs: [idAlumno, widget.clave]);
+    setState(() {}); // Actualizar la lista de alumnos
+  }
+
+  void _showDeleteConfirmationDialog(BuildContext context, int idAlumno) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Confirmar eliminación'),
+          content: const Text(
+              '¿Estás seguro de que deseas eliminar a esta persona del grupo?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancelar'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await _deleteAlumno(idAlumno);
+                Navigator.of(context).pop();
+              },
+              child: const Text('Eliminar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _showAddActivityDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Agregar Actividad'),
+          title: const Text('Agregar Actividad'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: _nombreActividadController,
-                decoration: InputDecoration(labelText: 'Nombre'),
+                decoration: const InputDecoration(labelText: 'Nombre'),
               ),
               TextField(
                 controller: _descActividadController,
-                decoration: InputDecoration(labelText: 'Descripción'),
+                decoration: const InputDecoration(labelText: 'Descripción'),
               ),
               TextField(
                 controller: _fechaActividadController,
-                decoration: InputDecoration(labelText: 'Fecha'),
+                decoration: const InputDecoration(labelText: 'Fecha'),
                 onTap: () async {
                   DateTime? pickedDate = await showDatePicker(
                     context: context,
@@ -97,7 +134,7 @@ class _GroupScreenState extends State<GroupScreen>
               ),
               TextField(
                 controller: _ponderacionActividadController,
-                decoration: InputDecoration(labelText: 'Ponderación'),
+                decoration: const InputDecoration(labelText: 'Ponderación'),
               ),
             ],
           ),
@@ -107,7 +144,7 @@ class _GroupScreenState extends State<GroupScreen>
                 _clearActivityForm();
                 Navigator.of(context).pop();
               },
-              child: Text('Cancelar'),
+              child: const Text('Cancelar'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -126,7 +163,7 @@ class _GroupScreenState extends State<GroupScreen>
                 _clearActivityForm();
                 Navigator.of(context).pop();
               },
-              child: Text('Agregar'),
+              child: const Text('Agregar'),
             ),
           ],
         );
@@ -135,7 +172,7 @@ class _GroupScreenState extends State<GroupScreen>
   }
 
   void _showAddAlumnoDialog(BuildContext context) {
-    String? _selectedAlumno;
+    String? selectedAlumno;
 
     showDialog(
       context: context,
@@ -144,15 +181,15 @@ class _GroupScreenState extends State<GroupScreen>
           future: _getAvailableAlumnos(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else {
               final alumnos = snapshot.data ?? [];
               return AlertDialog(
-                title: Text('Agregar Alumno'),
+                title: const Text('Agregar Alumno'),
                 content: DropdownButtonFormField<String>(
-                  value: _selectedAlumno,
+                  value: selectedAlumno,
                   items: alumnos.map((alumno) {
                     return DropdownMenuItem<String>(
                       value: alumno['id_alumno'].toString(),
@@ -160,16 +197,16 @@ class _GroupScreenState extends State<GroupScreen>
                     );
                   }).toList(),
                   onChanged: (value) {
-                    _selectedAlumno = value;
+                    selectedAlumno = value;
                   },
-                  decoration: InputDecoration(labelText: 'Alumno'),
+                  decoration: const InputDecoration(labelText: 'Alumno'),
                 ),
                 actions: [
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text('Cancelar'),
+                    child: const Text('Cancelar'),
                   ),
                   ElevatedButton(
                     onPressed: () async {
@@ -178,13 +215,13 @@ class _GroupScreenState extends State<GroupScreen>
                         'Folio',
                         {
                           'id_grupo': widget.clave,
-                          'id_alumno': int.parse(_selectedAlumno!),
+                          'id_alumno': int.parse(selectedAlumno!),
                         },
                       );
                       setState(() {}); // Actualizar la lista de alumnos
                       Navigator.of(context).pop();
                     },
-                    child: Text('Agregar'),
+                    child: const Text('Agregar'),
                   ),
                 ],
               );
@@ -206,13 +243,15 @@ class _GroupScreenState extends State<GroupScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Grupo: ${widget.clave} - ${widget.materia}'),
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text('Grupo: ${widget.clave} - ${widget.materia}'),
+        ),
         bottom: TabBar(
           controller: _tabController,
-          tabs: [
+          tabs: const [
             Tab(text: 'Actividades'),
             Tab(text: 'Personas'),
-            Tab(text: 'Ajustes'),
           ],
         ),
       ),
@@ -225,13 +264,13 @@ class _GroupScreenState extends State<GroupScreen>
                 future: _getActividades(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else {
                     final actividades = snapshot.data ?? [];
                     if (actividades.isEmpty) {
-                      return Center(
+                      return const Center(
                         child: Text(
                           'No hay actividades. Para agregar una actividad, presiona el botón "+" en la esquina inferior derecha.',
                           textAlign: TextAlign.center,
@@ -258,7 +297,7 @@ class _GroupScreenState extends State<GroupScreen>
                 right: 16,
                 child: FloatingActionButton(
                   onPressed: () => _showAddActivityDialog(context),
-                  child: Icon(Icons.add),
+                  child: const Icon(Icons.add),
                 ),
               ),
             ],
@@ -269,13 +308,13 @@ class _GroupScreenState extends State<GroupScreen>
                 future: _getAlumnos(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else {
                     final alumnos = snapshot.data ?? [];
                     if (alumnos.isEmpty) {
-                      return Center(
+                      return const Center(
                         child: Text(
                           'No hay alumnos inscritos en este grupo.',
                           textAlign: TextAlign.center,
@@ -290,6 +329,11 @@ class _GroupScreenState extends State<GroupScreen>
                           return ListTile(
                             title: Text(
                                 '${alumno['nombre']} ${alumno['apellido']}'),
+                            trailing: IconButton(
+                              icon: const Icon(Icons.close),
+                              onPressed: () => _showDeleteConfirmationDialog(
+                                  context, alumno['id_alumno']),
+                            ),
                           );
                         },
                       );
@@ -302,12 +346,11 @@ class _GroupScreenState extends State<GroupScreen>
                 right: 16,
                 child: FloatingActionButton(
                   onPressed: () => _showAddAlumnoDialog(context),
-                  child: Icon(Icons.add),
+                  child: const Icon(Icons.add),
                 ),
               ),
             ],
           ),
-          Center(child: Text('Ajustes')),
         ],
       ),
     );

@@ -43,8 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _showAddGroupDialog(BuildContext context) {
-    final _claveController = TextEditingController();
-    String? _selectedMateria;
+    final claveController = TextEditingController();
+    String? selectedMateria;
 
     showDialog(
       context: context,
@@ -53,22 +53,22 @@ class _HomeScreenState extends State<HomeScreen> {
           future: _getMaterias(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else {
               final materias = snapshot.data ?? [];
               return AlertDialog(
-                title: Text('Agregar Grupo'),
+                title: const Text('Agregar Grupo'),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextField(
-                      controller: _claveController,
-                      decoration: InputDecoration(labelText: 'Clave'),
+                      controller: claveController,
+                      decoration: const InputDecoration(labelText: 'Clave'),
                     ),
                     DropdownButtonFormField<String>(
-                      value: _selectedMateria,
+                      value: selectedMateria,
                       items: materias.map((materia) {
                         return DropdownMenuItem<String>(
                           value: materia['id_materia'].toString(),
@@ -76,9 +76,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       }).toList(),
                       onChanged: (value) {
-                        _selectedMateria = value;
+                        selectedMateria = value;
                       },
-                      decoration: InputDecoration(labelText: 'Materia'),
+                      decoration: const InputDecoration(labelText: 'Materia'),
                     ),
                   ],
                 ),
@@ -87,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text('Cancelar'),
+                    child: const Text('Cancelar'),
                   ),
                   ElevatedButton(
                     onPressed: () async {
@@ -101,9 +101,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         await db.insert(
                           'Grupo',
                           {
-                            'clave': _claveController.text,
+                            'clave': claveController.text,
                             'id_maestro': idMaestro,
-                            'id_materia': int.parse(_selectedMateria!),
+                            'id_materia': int.parse(selectedMateria!),
                           },
                         );
                         setState(() {}); // Actualizar la lista de grupos
@@ -111,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       Navigator.of(context).pop();
                     },
-                    child: Text('Agregar'),
+                    child: const Text('Agregar'),
                   ),
                 ],
               );
@@ -131,10 +131,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: const Text('Home'),
         actions: [
           IconButton(
-            icon: Icon(Icons.settings),
+            icon: const Icon(Icons.settings),
             onPressed: () {
               // Navegar a la pantalla de configuración
             },
@@ -145,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
         future: _getMaestroName(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
@@ -155,10 +155,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text('Hola, $maestroName!',
-                      style: TextStyle(fontSize: 24)),
+                      style: const TextStyle(fontSize: 24)),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
                   child:
                       Text('Lista de Grupos', style: TextStyle(fontSize: 20)),
                 ),
@@ -167,13 +167,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     future: _getGrupos(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
                         return Center(child: Text('Error: ${snapshot.error}'));
                       } else {
                         final grupos = snapshot.data ?? [];
                         if (grupos.isEmpty) {
-                          return Center(
+                          return const Center(
                             child: Text(
                               'No tienes grupos. Para crear un grupo, presiona el botón "+" en la esquina inferior derecha.',
                               textAlign: TextAlign.center,
@@ -214,7 +214,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddGroupDialog(context),
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }

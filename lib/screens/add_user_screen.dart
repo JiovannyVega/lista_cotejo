@@ -75,7 +75,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Agregar Usuario'),
+        title: const Text('Agregar Usuario'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -83,38 +83,38 @@ class _AddUserScreenState extends State<AddUserScreen> {
           children: [
             TextField(
               controller: _usernameController,
-              decoration: InputDecoration(labelText: 'Username'),
+              decoration: const InputDecoration(labelText: 'Username'),
             ),
             TextField(
               controller: _passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
+              decoration: const InputDecoration(labelText: 'Password'),
               obscureText: true,
             ),
             TextField(
               controller: _repeatPasswordController,
-              decoration: InputDecoration(labelText: 'Repetir Password'),
+              decoration: const InputDecoration(labelText: 'Repetir Password'),
               obscureText: true,
             ),
             TextField(
               controller: _nombreController,
-              decoration: InputDecoration(labelText: 'Nombre'),
+              decoration: const InputDecoration(labelText: 'Nombre'),
             ),
             TextField(
               controller: _apellidoController,
-              decoration: InputDecoration(labelText: 'Apellido'),
+              decoration: const InputDecoration(labelText: 'Apellido'),
             ),
             TextField(
               controller: _carreraController,
-              decoration: InputDecoration(labelText: 'Carrera'),
+              decoration: const InputDecoration(labelText: 'Carrera'),
             ),
             ElevatedButton(
               onPressed: _addUser,
-              child: Text('Agregar Usuario'),
+              child: const Text('Agregar Usuario'),
             ),
             if (_errorMessage.isNotEmpty)
               Text(
                 _errorMessage,
-                style: TextStyle(color: Colors.red),
+                style: const TextStyle(color: Colors.red),
               ),
           ],
         ),
