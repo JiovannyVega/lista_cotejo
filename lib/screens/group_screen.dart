@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'activity_detail_screen.dart';
 import 'alumno_detail_screen.dart';
 
@@ -20,12 +21,29 @@ class _GroupScreenState extends State<GroupScreen>
   final _descActividadController = TextEditingController();
   final _fechaActividadController = TextEditingController();
   final _ponderacionActividadController = TextEditingController();
+  Map<DateTime, List<dynamic>> _events = {};
 
   @override
   void initState() {
     super.initState();
     _tabController =
-        TabController(length: 2, vsync: this); // Cambiar a 2 pestañas
+        TabController(length: 3, vsync: this); // Cambiar a 3 pestañas
+    _loadEvents();
+  }
+
+  Future<void> _loadEvents() async {
+    final actividades = await _getActividades();
+    setState(() {
+      _events = {};
+      for (var actividad in actividades) {
+        final date = DateTime.parse(actividad['fecha']);
+        final eventDate = DateTime(date.year, date.month, date.day);
+        if (_events[eventDate] == null) {
+          _events[eventDate] = [];
+        }
+        _events[eventDate]!.add(actividad);
+      }
+    });
   }
 
   @override
@@ -163,6 +181,7 @@ class _GroupScreenState extends State<GroupScreen>
                     'id_grupo': widget.clave,
                   },
                 );
+                await _loadEvents(); // Recargar eventos
                 setState(() {}); // Actualizar la lista de actividades
                 _clearActivityForm();
                 Navigator.of(context).pop();
@@ -243,6 +262,37 @@ class _GroupScreenState extends State<GroupScreen>
     _ponderacionActividadController.clear();
   }
 
+  void _showActivitiesForDay(BuildContext context, DateTime day) {
+    final eventDate = DateTime(day.year, day.month, day.day);
+    final activities = _events[eventDate] ?? [];
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(
+              'Actividades para ${eventDate.toLocal().toString().split(' ')[0]}'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: activities.map<Widget>((actividad) {
+              return ListTile(
+                title: Text(actividad['nombre']),
+                subtitle: Text(actividad['desc']),
+              );
+            }).toList(),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cerrar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -256,6 +306,7 @@ class _GroupScreenState extends State<GroupScreen>
           tabs: const [
             Tab(text: 'Actividades'),
             Tab(text: 'Personas'),
+            Tab(text: 'Calendario'),
           ],
         ),
       ),
@@ -377,6 +428,36 @@ class _GroupScreenState extends State<GroupScreen>
                 ),
               ),
             ],
+          ),
+          Center(
+            child: TableCalendar(
+              firstDay: DateTime.utc(2000, 1, 1),
+              lastDay: DateTime.utc(2100, 12, 31),
+              focusedDay: DateTime.now(),
+              calendarFormat: CalendarFormat.month,
+              startingDayOfWeek: StartingDayOfWeek.monday,
+              headerStyle: const HeaderStyle(
+                formatButtonVisible: false,
+                titleCentered: true,
+              ),
+              calendarStyle: CalendarStyle(
+                todayDecoration: BoxDecoration(
+                  color: Colors.blue,
+                  shape: BoxShape.circle,
+                ),
+                markerDecoration: BoxDecoration(
+                  color: Colors.red,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              eventLoader: (day) {
+                final eventDate = DateTime(day.year, day.month, day.day);
+                return _events[eventDate] ?? [];
+              },
+              onDaySelected: (selectedDay, focusedDay) {
+                _showActivitiesForDay(context, selectedDay);
+              },
+            ),
           ),
         ],
       ),
