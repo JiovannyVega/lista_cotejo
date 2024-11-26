@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'group_screen.dart';
+import 'settings_screen.dart'; // Add this line to import the SettingsScreen class
 
 class HomeScreen extends StatefulWidget {
   final Future<Database> database;
@@ -135,8 +136,25 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
+            onPressed: () async {
+              final result = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SettingsScreen(
+                    database: widget.database,
+                    username: widget.username,
+                  ),
+                ),
+              );
+              if (result == true) {
+                setState(() {}); // Refrescar la pantalla principal
+              }
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout),
             onPressed: () {
-              // Navegar a la pantalla de configuración
+              Navigator.pushReplacementNamed(context, '/');
             },
           ),
         ],

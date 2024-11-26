@@ -4,6 +4,7 @@ import 'package:path/path.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/add_user_screen.dart';
+import 'screens/settings_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -248,6 +249,11 @@ class MainApp extends StatelessWidget {
         '/home': (context) => HomeScreen(
             database: database, username: ''), // Proveer un valor por defecto
         '/add_user': (context) => AddUserScreen(database: database),
+        '/settings': (context) => SettingsScreen(
+              database: database,
+              username:
+                  '', // Proveer un valor por defecto o ajustar según sea necesario
+            ),
       },
     );
   }
