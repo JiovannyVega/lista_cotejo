@@ -10,7 +10,7 @@ import 'screens/students_screen.dart'; // Importar la nueva pantalla de alumnos
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final databasePath = join(await getDatabasesPath(), 'lista_cotejo.db');
-  // await deleteDatabase(databasePath); // Eliminar la base de datos existente
+  //await deleteDatabase(databasePath); // Eliminar la base de datos existente
 
   final database = openDatabase(
     databasePath,
@@ -116,11 +116,13 @@ void main() async {
       ''');
 
       // Insertar 5 materias con validación
-      await insertMateria(db, 'Matemáticas');
-      await insertMateria(db, 'Física');
-      await insertMateria(db, 'Quimica');
-      await insertMateria(db, 'Biología');
-      await insertMateria(db, 'Historia');
+      await insertMateria(db, 'Taller de investigacion I');
+      await insertMateria(db, 'Taller de investigacion II');
+      await insertMateria(db, 'Graficacion');
+      await insertMateria(db, 'Inteligencia artificial');
+      await insertMateria(db, 'Programacion nativa para dispositivos moviles');
+      await insertMateria(db, 'Taller de base de datos');
+      await insertMateria(db, 'Fundamentos de base de datos');
 
       // Insertar un usuario con validación
       final idMaestro = await db.insert(
