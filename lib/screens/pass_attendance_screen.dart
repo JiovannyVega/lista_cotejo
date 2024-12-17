@@ -98,30 +98,30 @@ class _PassAttendanceScreenState extends State<PassAttendanceScreen> {
                     ListTile(
                       title: Text('${alumno['nombre']} ${alumno['apellido']}'),
                     ),
-                    SwitchListTile(
+                    CheckboxListTile(
                       title: const Text('Asistencia'),
                       value: _asistencia[idAlumno]!,
                       onChanged: (value) {
                         setState(() {
-                          _asistencia[idAlumno] = value;
+                          _asistencia[idAlumno] = value!;
                         });
                       },
                     ),
-                    SwitchListTile(
+                    CheckboxListTile(
                       title: const Text('Participación'),
                       value: _participacion[idAlumno]!,
                       onChanged: (value) {
                         setState(() {
-                          _participacion[idAlumno] = value;
+                          _participacion[idAlumno] = value!;
                         });
                       },
                     ),
-                    SwitchListTile(
+                    CheckboxListTile(
                       title: const Text('Conducta'),
                       value: _conducta[idAlumno]!,
                       onChanged: (value) {
                         setState(() {
-                          _conducta[idAlumno] = value;
+                          _conducta[idAlumno] = value!;
                         });
                       },
                     ),
@@ -143,25 +143,28 @@ class _PassAttendanceScreenState extends State<PassAttendanceScreen> {
                 'Asistencia',
                 {
                   'asistencia': _asistencia[idAlumno]! ? 1 : 0,
-                  'fecha': DateTime.now().toIso8601String(),
+                  'fecha': widget.date.toIso8601String(),
                   'id_folio': idFolio,
                 },
+                conflictAlgorithm: ConflictAlgorithm.replace,
               );
               await db.insert(
                 'Participacion',
                 {
                   'participacion': _participacion[idAlumno]! ? 1 : 0,
-                  'fecha': DateTime.now().toIso8601String(),
+                  'fecha': widget.date.toIso8601String(),
                   'id_folio': idFolio,
                 },
+                conflictAlgorithm: ConflictAlgorithm.replace,
               );
               await db.insert(
                 'Conducta',
                 {
                   'conducta': _conducta[idAlumno]! ? 1 : 0,
-                  'fecha': DateTime.now().toIso8601String(),
+                  'fecha': widget.date.toIso8601String(),
                   'id_folio': idFolio,
                 },
+                conflictAlgorithm: ConflictAlgorithm.replace,
               );
             }
             Navigator.of(context).pop();
