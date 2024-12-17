@@ -272,6 +272,9 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primaryColor: Color(0xFF924e7d), // Update primary color
+      ),
       initialRoute: '/',
       routes: {
         '/': (context) => LoginScreen(database: database),

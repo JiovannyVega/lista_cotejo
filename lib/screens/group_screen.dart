@@ -113,6 +113,9 @@ class _GroupScreenState extends State<GroupScreen>
                 Navigator.of(context).pop();
               },
               child: const Text('Eliminar'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF7F1E57), // Color guindo
+              ),
             ),
           ],
         );
@@ -198,6 +201,9 @@ class _GroupScreenState extends State<GroupScreen>
                 Navigator.of(context).pop();
               },
               child: const Text('Agregar'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF7F1E57), // Color guindo
+              ),
             ),
           ],
         );
@@ -263,6 +269,9 @@ class _GroupScreenState extends State<GroupScreen>
                       Navigator.of(context).pop();
                     },
                     child: const Text('Agregar'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF7F1E57), // Color guindo
+                    ),
                   ),
                 ],
               );
@@ -311,6 +320,9 @@ class _GroupScreenState extends State<GroupScreen>
                 _navigateToPassAttendanceScreen(context, day);
               },
               child: const Text('Pasar Lista'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF7F1E57), // Color guindo
+              ),
             ),
           ],
         );
@@ -336,6 +348,7 @@ class _GroupScreenState extends State<GroupScreen>
           fit: BoxFit.scaleDown,
           child: Text('Grupo: ${widget.clave} - ${widget.materia}'),
         ),
+        backgroundColor: const Color(0xFF924e7d), // Update primary color
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
@@ -398,6 +411,8 @@ class _GroupScreenState extends State<GroupScreen>
                 child: FloatingActionButton(
                   onPressed: () => _showAddActivityDialog(context),
                   child: const Icon(Icons.add),
+                  backgroundColor:
+                      const Color(0xFF924e7d), // Update primary color
                 ),
               ),
             ],
@@ -460,6 +475,8 @@ class _GroupScreenState extends State<GroupScreen>
                 child: FloatingActionButton(
                   onPressed: () => _showAddAlumnoDialog(context),
                   child: const Icon(Icons.add),
+                  backgroundColor:
+                      const Color(0xFF924e7d), // Update primary color
                 ),
               ),
             ],
@@ -479,7 +496,7 @@ class _GroupScreenState extends State<GroupScreen>
                   ),
                   calendarStyle: CalendarStyle(
                     todayDecoration: BoxDecoration(
-                      color: Colors.blue,
+                      color: const Color(0xFF7F1E57), // Color guindo
                       shape: BoxShape.circle,
                     ),
                     markerDecoration: BoxDecoration(

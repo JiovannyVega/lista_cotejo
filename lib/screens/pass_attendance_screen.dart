@@ -74,6 +74,7 @@ class _PassAttendanceScreenState extends State<PassAttendanceScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pasar Asistencia'),
+        backgroundColor: const Color(0xFF924e7d), // Update primary color
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _getAlumnos(),

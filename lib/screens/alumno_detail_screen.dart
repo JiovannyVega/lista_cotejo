@@ -42,6 +42,7 @@ class AlumnoDetailScreen extends StatelessWidget {
       return Scaffold(
         appBar: AppBar(
           title: const Text('Error'),
+          backgroundColor: const Color(0xFF7F1E57), // Color guindo
         ),
         body: const Center(
           child: Text(
@@ -56,6 +57,7 @@ class AlumnoDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('$nombre $apellido'),
+        backgroundColor: const Color(0xFF924e7d), // Update primary color
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -64,7 +66,10 @@ class AlumnoDetailScreen extends StatelessWidget {
           children: [
             const Text(
               'Actividades:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF7F1E57)),
             ),
             Expanded(
               child: FutureBuilder<List<Map<String, dynamic>>>(
@@ -81,7 +86,8 @@ class AlumnoDetailScreen extends StatelessWidget {
                         child: Text(
                           'No hay actividades registradas para este alumno.',
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 16),
+                          style:
+                              TextStyle(fontSize: 16, color: Color(0xFF7F1E57)),
                         ),
                       );
                     } else {
@@ -89,10 +95,20 @@ class AlumnoDetailScreen extends StatelessWidget {
                         itemCount: actividades.length,
                         itemBuilder: (context, index) {
                           final actividad = actividades[index];
-                          return ListTile(
-                            title: Text(actividad['nombre']),
-                            trailing: Text(
-                                'Calificación: ${actividad['calif']} / ${actividad['ponderacion']}'),
+                          return Card(
+                            margin: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: ListTile(
+                              title: Text(
+                                actividad['nombre'],
+                                style:
+                                    const TextStyle(color: Color(0xFF7F1E57)),
+                              ),
+                              trailing: Text(
+                                'Calificación: ${actividad['calif']} / ${actividad['ponderacion']}',
+                                style:
+                                    const TextStyle(color: Color(0xFF7F1E57)),
+                              ),
+                            ),
                           );
                         },
                       );

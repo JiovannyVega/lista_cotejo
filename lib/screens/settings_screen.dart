@@ -172,6 +172,7 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Ajustes'),
+        backgroundColor: const Color(0xFF924e7d), // Update primary color
       ),
       body: Center(
         child: Column(

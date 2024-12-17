@@ -153,6 +153,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lista de Alumnos'),
+        backgroundColor: const Color(0xFF924e7d), // Update primary color
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _getAlumnos(),
@@ -205,6 +206,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddStudentDialog(context),
         child: const Icon(Icons.add),
+        backgroundColor: const Color(0xFF924e7d), // Update primary color
       ),
     );
   }

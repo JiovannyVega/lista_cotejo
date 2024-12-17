@@ -131,6 +131,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
                     },
                     child: const Text('Agregar'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF7F1E57), // Color guindo
+                    ),
                   ),
                 ],
               );
@@ -151,6 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
+        backgroundColor: const Color(0xFF924e7d), // Update primary color
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -221,20 +225,24 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemCount: grupos.length,
                             itemBuilder: (context, index) {
                               final grupo = grupos[index];
-                              return ListTile(
-                                title: Text(grupo['clave']),
-                                subtitle: Text(grupo['materia']),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => GroupScreen(
-                                        clave: grupo['clave'],
-                                        materia: grupo['materia'],
+                              return Card(
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 8.0, horizontal: 16.0),
+                                child: ListTile(
+                                  title: Text(grupo['clave']),
+                                  subtitle: Text(grupo['materia']),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => GroupScreen(
+                                          clave: grupo['clave'],
+                                          materia: grupo['materia'],
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
+                                    );
+                                  },
+                                ),
                               );
                             },
                           );
@@ -251,6 +259,7 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddGroupDialog(context),
         child: const Icon(Icons.add),
+        backgroundColor: const Color(0xFF924e7d), // Update primary color
       ),
     );
   }

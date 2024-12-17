@@ -83,6 +83,7 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.actividad['nombre']),
+        backgroundColor: const Color(0xFF924e7d), // Update primary color
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -91,27 +92,33 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
           children: [
             Text(
               'Nombre: ${widget.actividad['nombre']}',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF7F1E57)),
             ),
             const SizedBox(height: 8),
             Text(
               'Descripción: ${widget.actividad['desc']}',
-              style: const TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16, color: Color(0xFF7F1E57)),
             ),
             const SizedBox(height: 8),
             Text(
               'Fecha: ${widget.actividad['fecha']}',
-              style: const TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16, color: Color(0xFF7F1E57)),
             ),
             const SizedBox(height: 8),
             Text(
               'Ponderación: ${widget.actividad['ponderacion']}',
-              style: const TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16, color: Color(0xFF7F1E57)),
             ),
             const SizedBox(height: 16),
             const Text(
               'Alumnos:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF7F1E57)),
             ),
             Expanded(
               child: FutureBuilder<List<Map<String, dynamic>>>(
@@ -128,7 +135,8 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
                         child: Text(
                           'No hay alumnos inscritos en este grupo.',
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 16),
+                          style:
+                              TextStyle(fontSize: 16, color: Color(0xFF7F1E57)),
                         ),
                       );
                     } else {
@@ -136,16 +144,25 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
                         itemCount: alumnos.length,
                         itemBuilder: (context, index) {
                           final alumno = alumnos[index];
-                          return ListTile(
-                            title: Text(
-                                '${alumno['nombre']} ${alumno['apellido']}'),
-                            trailing: Text(
-                                'Calificación: ${alumno['calif']} / ${widget.actividad['ponderacion']}'),
-                            onTap: () => _showEditCalificacionDialog(
-                              context,
-                              alumno['id_folio'],
-                              widget.actividad['ponderacion'],
-                              alumno['calif'],
+                          return Card(
+                            margin: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: ListTile(
+                              title: Text(
+                                '${alumno['nombre']} ${alumno['apellido']}',
+                                style:
+                                    const TextStyle(color: Color(0xFF7F1E57)),
+                              ),
+                              trailing: Text(
+                                'Calificación: ${alumno['calif']} / ${widget.actividad['ponderacion']}',
+                                style:
+                                    const TextStyle(color: Color(0xFF7F1E57)),
+                              ),
+                              onTap: () => _showEditCalificacionDialog(
+                                context,
+                                alumno['id_folio'],
+                                widget.actividad['ponderacion'],
+                                alumno['calif'],
+                              ),
                             ),
                           );
                         },

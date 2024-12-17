@@ -104,6 +104,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Agregar Usuario'),
+        backgroundColor: const Color(0xFF924e7d), // Update primary color
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
